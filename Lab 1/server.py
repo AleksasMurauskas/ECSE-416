@@ -8,11 +8,9 @@ Server Side
 
 #import statements
 import socket
-
 #Set server information 
 ServerName = '127.0.0.1'
 serverPort = 12345
-
 #Create Socket
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #Bind Socket to server name and Port number 
@@ -25,18 +23,26 @@ while True: #Infinite loop to listen
     print("Client Request recieved.")
     request = connectionSocket.recv(1024).decode()  
     filename = request
+    #unsure how to do images
     #capitalizedSentence = request.upper()
     try:
 		file = open(filename, "r")
 	except IOError:
 		print("File Does Not Exist, must send failed message")
 		resp = "\HTTP/1.1 404 not found"
-
+        connectionSocket.send(resp.encode())
+        print("Server Response Sent.")
+        connectionSocket.close()
+        print("Socket closed and request cannot be completed.")
+        continue
+    resp = "HTTP/1.1 200 OK"
+    connectionSocket.send(resp.encode())
+    print("HTTP Response Sent.")
 	file_content = file.read()
-    
+    connectionSocket.send(file_content.encode())
     #Send Server Response 
     #connectionSocket.send(capitalizedSentence.encode())
-    print("Server Response Sent")
+    print("Server Response Sent.")
     connectionSocket.close()
     print("Socket closed and request completed.")
 

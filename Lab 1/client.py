@@ -42,11 +42,8 @@ except socket.error:
 	print("Client Socket could not connect to server")
 	sys.exit(1)
 
-
-
 #Create File request
 fileRequest = filename
-
 clientSocket.send(fileRequest.encode())
 print("Request Message Sent")
 
@@ -54,6 +51,11 @@ serverResponse = clientSocket.recv(1024)
 print('Server HTTP Response: ', serverResponse.decode())
 if(serverResponse=="\HTTP/1.1 404 not found"):
 	print("404 Not Found")
+	clientSocket.close()
+	sys.exit(1)
+
+file_info = clientSocket.recv(1024)
+print(file_info)
 clientSocket.close()
 print("Socket Closed")
 sys.exit(0)
