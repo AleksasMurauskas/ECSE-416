@@ -10,7 +10,7 @@ Server Side
 import socket
 import sys
 #Set server information 
-ServerName = '127.0.0.1'
+ServerName = '127.0.0.2'
 serverPort = 12345
 #Create Socket
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

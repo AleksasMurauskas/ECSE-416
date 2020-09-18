@@ -1,6 +1,6 @@
 """
 Aleksas Murauskas 260718389
-Florence Diep 
+Florence Diep     260727117
 ECSE 416
 Lab 1: Client/Server
 Client Side 
@@ -10,22 +10,22 @@ import socket
 import sys
 
 #Standard Server Name and Port Numbers and timeout 
-serverName = '127.0.0.1'
+serverName = '127.0.0.2'
 serverPort = 12345
 timeout= 5
 #Parse command line inputs
 
 if(len(sys.argv)==5): #In case of 5 aruments 0. client.py 1. [-host] 2. [-port] 3. [-filename] 4. [-timeout]
-	serverName= str(argv[1])
-	serverPort = int(argv[2])
-	filename = str(argv[3])
-	timeout = int(argv[4])
+	serverName= str(sys.argv[1])
+	serverPort = int(sys.argv[2])
+	filename = str(sys.argv[3])
+	timeout = int(sys.argv[4])
 
 
 elif (len(sys.argv)==4): #In case of 4 aruments 0. client.py 1. [-host] 2. [-port] 3. [-filename]
-	serverName= str(argv[1])
-	serverPort = int(argv[2])
-	filename = str(argv[3])
+	serverName= str(sys.argv[1])
+	serverPort = int(sys.argv[2])
+	filename = str(sys.argv[3])
 
 else: #Incorrect Number of arguments
 	print("Incorrect number of arguments, exiting program")
