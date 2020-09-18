@@ -1,6 +1,6 @@
 """
 Aleksas Murauskas 260718389
-Florence Diep 
+Florence Diep     260727117
 ECSE 416
 Lab 1: Client/Server
 Server Side 
@@ -8,6 +8,7 @@ Server Side
 
 #import statements
 import socket
+import sys
 #Set server information 
 ServerName = '127.0.0.1'
 serverPort = 12345
@@ -26,10 +27,10 @@ while True: #Infinite loop to listen
     #unsure how to do images
     #capitalizedSentence = request.upper()
     try:
-		file = open(filename, "r")
-	except IOError:
-		print("File Does Not Exist, must send failed message")
-		resp = "\HTTP/1.1 404 not found"
+        file = open(filename, "r")
+    except IOError:
+        print("File Does Not Exist, must send failed message")
+        resp = "\HTTP/1.1 404 not found"
         connectionSocket.send(resp.encode())
         print("Server Response Sent.")
         connectionSocket.close()
@@ -38,7 +39,7 @@ while True: #Infinite loop to listen
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-	file_content = file.read()
+    file_content = file.read()
     connectionSocket.send(file_content.encode())
     #Send Server Response 
     #connectionSocket.send(capitalizedSentence.encode())
