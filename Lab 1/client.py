@@ -58,8 +58,8 @@ if(serverResponse=="\HTTP/1.1 404 not found"):
 
 # receive file content
 mimetypeResponse = clientSocket.recv(1024).decode("utf-8")
-file_content = clientSocket.recv(1024).decode("utf-8")
 if(mimetypeResponse=="text/html"):
+	file_content = clientSocket.recv(1024).decode("utf-8")
 	print("Content-type: ", mimetypeResponse)
 	print(file_content)
 elif(mimetypeResponse=="image/jpg"):
