@@ -19,7 +19,6 @@ serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.bind((ServerName, serverPort))
 #Wait for a Client Request 
 serverSocket.listen(1)
-print('Server is awaiting Input')
 while True: #Infinite loop to listen
     connectionSocket, addr = serverSocket.accept()
     print("Client Request received.")
@@ -43,7 +42,6 @@ while True: #Infinite loop to listen
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-    print("here", mimetype)
     connectionSocket.send(mimetype.encode())
     print("Content Type Response Sent.")
     connectionSocket.send(file_content.encode())
