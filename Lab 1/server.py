@@ -5,68 +5,58 @@ ECSE 416
 Lab 1: Client/Server
 Server Side 
 """
-
 #import statements
 import socket
 import sys
 import pickle
 from PIL import Image
+
 #Set server information 
 ServerName = '127.0.0.2'
 serverPort = 12345
+
 #Create Socket
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 #Bind Socket to server name and Port number 
 serverSocket.bind((ServerName, serverPort))
+
 #Wait for a Client Request 
 serverSocket.listen(1)
-print('Server is awaiting Input')
-while True: #Infinite loop to listen
+
+#Infinite loop to listen
+while True: 
     connectionSocket, addr = serverSocket.accept()
     print("Client Request received.")
     request = connectionSocket.recv(1024).decode()  
     filename = request
-    db = {}
-    #unsure how to do images
-    #capitalizedSentence = request.upper()
+    #Use pickle library to serialize content
     try:
         if(filename.endswith(".txt")):
-            file_content = open(filename, "r").read()
-            mimetype = "text/html"
+            data = open(filename, "r").read()
+            mime_type = "text/html"
         elif(filename.endswith(".jpg")):
-            file_content = Image.open(filename)
-            mimetype = "image/jpg"
-        data = pickle.dumps(file_content)
+            data = Image.open(filename)
+            mime_type = "image/jpg"
+        file_content = pickle.dumps(data)
     except IOError:
-        print("File Does Not Exist, must send failed message")
+        print("Unknown file, must send failed message")
         resp = "\HTTP/1.1 404 not found"
         connectionSocket.send(resp.encode())
         print("Server Response Sent.")
         connectionSocket.close()
         print("Socket closed and request cannot be completed.")
         continue
+    #Send Server Response 
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-    print(file_content)
-    connectionSocket.send(data)
-    #Send Server Response 
-    #connectionSocket.send(capitalizedSentence.encode())
-    print("Server Response Sent.")
+    #Send Content Type Response
+    connectionSocket.send(mime_type.encode("utf-8"))
+    print("Content Type Response Sent.")
+    #Send File Content Response
+    connectionSocket.send(file_content)
+    print("File Content Response Sent.")
+    #Close Socket
     connectionSocket.close()
     print("Socket closed and request completed.")
-
-
-"""
-import socket
-serverPort = 12345
-serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serverSocket.bind(('127.0.0.1', serverPort))
-serverSocket.listen(1)
-print('The server is ready to receive')
-while True:
-    connectionSocket, addr = serverSocket.accept()
-    sentence = connectionSocket.recv(1024).decode()
-    capitalizedSentence = sentence.upper()
-    connectionSocket.send(capitalizedSentence.encode())
-    connectionSocket.close()"""
