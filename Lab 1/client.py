@@ -64,9 +64,7 @@ while True:
 	if not packet: break
 	data.append(packet)
 f = pickle.loads(b"".join(data))
-print(f)
-print(io.BytesIO(f))
-Image.open(f).show()
+f.show()
 clientSocket.close()
 print("Socket Closed")
 sys.exit(0)
