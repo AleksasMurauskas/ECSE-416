@@ -9,6 +9,8 @@ Client Side
 import socket
 import sys
 import pickle
+from PIL import Image
+import io
 
 #Standard Server Name and Port Numbers and timeout 
 serverName = '127.0.0.2'
@@ -56,9 +58,15 @@ if(serverResponse=="\HTTP/1.1 404 not found"):
 	sys.exit(1)
 # TODO: Content-type
 
-file_content = clientSocket.recv(1024)
-f = pickle.loads(file_content)
+data = []
+while True:
+	packet = clientSocket.recv(1024)
+	if not packet: break
+	data.append(packet)
+f = pickle.loads(b"".join(data))
 print(f)
+print(io.BytesIO(f))
+Image.open(f).show()
 clientSocket.close()
 print("Socket Closed")
 sys.exit(0)

@@ -10,6 +10,7 @@ Server Side
 import socket
 import sys
 import pickle
+from PIL import Image
 #Set server information 
 ServerName = '127.0.0.2'
 serverPort = 12345
@@ -29,7 +30,12 @@ while True: #Infinite loop to listen
     #unsure how to do images
     #capitalizedSentence = request.upper()
     try:
-        file_content = open(filename, "r").read()
+        if(filename.endswith(".txt")):
+            file_content = open(filename, "r").read()
+            mimetype = "text/html"
+        elif(filename.endswith(".jpg")):
+            file_content = Image.open(filename)
+            mimetype = "image/jpg"
         data = pickle.dumps(file_content)
     except IOError:
         print("File Does Not Exist, must send failed message")
