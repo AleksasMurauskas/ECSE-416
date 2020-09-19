@@ -40,10 +40,12 @@ clientSocket.settimeout(timeout)
 #Connect Socket
 try:
 	clientSocket.connect((serverName, serverPort))
+
 except socket.error:
 	print("Client Socket could not connect to server")
 	sys.exit(1)
 
+print("Connection OK.")
 #Create File request
 fileRequest = filename
 clientSocket.send(fileRequest.encode())
@@ -52,7 +54,7 @@ print("Request Message Sent")
 #receive server response
 serverResponse = clientSocket.recv(1024)
 print('Server HTTP Response: ', serverResponse.decode())
-if(serverResponse=="\HTTP/1.1 404 not found"):
+if(serverResponse.decode()=="\HTTP/1.1 404 not found"):
 	print("404 Not Found")
 	clientSocket.close()
 	sys.exit(1)
