@@ -9,6 +9,7 @@ Server Side
 #import statements
 import socket
 import sys
+import pickle
 #Set server information 
 ServerName = '127.0.0.2'
 serverPort = 12345
@@ -21,13 +22,15 @@ serverSocket.listen(1)
 print('Server is awaiting Input')
 while True: #Infinite loop to listen
     connectionSocket, addr = serverSocket.accept()
-    print("Client Request recieved.")
+    print("Client Request received.")
     request = connectionSocket.recv(1024).decode()  
     filename = request
+    db = {}
     #unsure how to do images
     #capitalizedSentence = request.upper()
     try:
-        file = open(filename, "r")
+        file_content = open(filename, "r").read()
+        data = pickle.dumps(file_content)
     except IOError:
         print("File Does Not Exist, must send failed message")
         resp = "\HTTP/1.1 404 not found"
@@ -39,8 +42,8 @@ while True: #Infinite loop to listen
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-    file_content = file.read()
-    connectionSocket.send(file_content.encode())
+    print(file_content)
+    connectionSocket.send(data)
     #Send Server Response 
     #connectionSocket.send(capitalizedSentence.encode())
     print("Server Response Sent.")

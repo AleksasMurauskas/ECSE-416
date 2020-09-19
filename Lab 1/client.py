@@ -8,6 +8,7 @@ Client Side
 #import statements
 import socket
 import sys
+import pickle
 
 #Standard Server Name and Port Numbers and timeout 
 serverName = '127.0.0.2'
@@ -53,9 +54,11 @@ if(serverResponse=="\HTTP/1.1 404 not found"):
 	print("404 Not Found")
 	clientSocket.close()
 	sys.exit(1)
+# TODO: Content-type
 
-file_info = clientSocket.recv(1024)
-print(file_info)
+file_content = clientSocket.recv(1024)
+f = pickle.loads(file_content)
+print(f)
 clientSocket.close()
 print("Socket Closed")
 sys.exit(0)
