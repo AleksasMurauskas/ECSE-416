@@ -9,6 +9,7 @@ Server Side
 #import statements
 import socket
 import sys
+from PIL import Image
 #Set server information 
 ServerName = '127.0.0.2'
 serverPort = 12345
@@ -21,15 +22,18 @@ serverSocket.listen(1)
 print('Server is awaiting Input')
 while True: #Infinite loop to listen
     connectionSocket, addr = serverSocket.accept()
-    print("Client Request recieved.")
-    request = connectionSocket.recv(1024).decode()  
-    filename = request
-    #unsure how to do images
-    #capitalizedSentence = request.upper()
+    print("Client Request received.")
+    filerequest = connectionSocket.recv(1024).decode()
+    filename = filerequest
     try:
-        file = open(filename, "r")
+        if(filename.endswith(".txt")):
+            file_content = open(filename, "r").read()
+            mimetype = "text/html"
+        elif(filename.endswith(".jpg")):
+            file_content = Image.open(filename)
+            mimetype = "image/jpg"
     except IOError:
-        print("File Does Not Exist, must send failed message")
+        print("Unknown file, must send failed message")
         resp = "\HTTP/1.1 404 not found"
         connectionSocket.send(resp.encode())
         print("Server Response Sent.")
@@ -39,11 +43,12 @@ while True: #Infinite loop to listen
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-    file_content = file.read()
+    print("here", mimetype)
+    connectionSocket.send(mimetype.encode())
+    print("Content Type Response Sent.")
     connectionSocket.send(file_content.encode())
+    print("File Content Response Sent.")
     #Send Server Response 
-    #connectionSocket.send(capitalizedSentence.encode())
-    print("Server Response Sent.")
     connectionSocket.close()
     print("Socket closed and request completed.")
 
