@@ -9,6 +9,7 @@ Client Side
 import socket
 import sys
 from PIL import Image
+import io
 
 #Standard Server Name and Port Numbers and timeout 
 serverName = '127.0.0.2'
@@ -58,11 +59,16 @@ if(serverResponse=="\HTTP/1.1 404 not found"):
 
 # receive file content
 mimetypeResponse = clientSocket.recv(1024).decode("utf-8")
+print("Content-type: ", mimetypeResponse)
 if(mimetypeResponse=="text/html"):
 	file_content = clientSocket.recv(1024).decode("utf-8")
-	print("Content-type: ", mimetypeResponse)
 	print(file_content)
 elif(mimetypeResponse=="image/jpg"):
+	raw_img = clientSocket.recv(1024)
+	size = tuple(clientSocket.recv(1024).decode("utf-8"))
+	print(type(size))
+	print(size)
+	file_content = Image.frombytes('RGB', size, raw_img)
 	Image.open(file_content).show()
 clientSocket.close()
 print("Socket Closed")

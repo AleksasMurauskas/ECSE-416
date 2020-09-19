@@ -10,6 +10,7 @@ Server Side
 import socket
 import sys
 from PIL import Image
+import io
 #Set server information 
 ServerName = '127.0.0.2'
 serverPort = 12345
@@ -27,9 +28,12 @@ while True: #Infinite loop to listen
     try:
         if(filename.endswith(".txt")):
             file_content = open(filename, "r").read()
+            print(type(file_content))
             mimetype = "text/html"
         elif(filename.endswith(".jpg")):
-            file_content = Image.open(filename)
+            img = Image.open(filename)
+            file_content = img.tobytes()
+            # file_content = Image.open(filename)
             mimetype = "image/jpg"
     except IOError:
         print("Unknown file, must send failed message")
@@ -42,9 +46,14 @@ while True: #Infinite loop to listen
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-    connectionSocket.send(mimetype.encode())
+    connectionSocket.send(mimetype.encode("utf-8"))
     print("Content Type Response Sent.")
-    connectionSocket.send(file_content.encode())
+    # connectionSocket.send(file_content.encode())
+    connectionSocket.send(file_content)
+    print(img.size)
+    print(type(img.size))
+    print(tuple(bytes(img.size)))
+    connectionSocket.send(bytes(img.size))
     print("File Content Response Sent.")
     #Send Server Response 
     connectionSocket.close()
