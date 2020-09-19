@@ -1,6 +1,6 @@
 """
 Aleksas Murauskas 260718389
-Florence Diep 
+Florence Diep     260727117
 ECSE 416
 Lab 1: Client/Server
 Server Side 
@@ -8,8 +8,10 @@ Server Side
 
 #import statements
 import socket
+import sys
+from PIL import Image
 #Set server information 
-ServerName = '127.0.0.1'
+ServerName = '127.0.0.2'
 serverPort = 12345
 #Create Socket
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,19 +19,21 @@ serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.bind((ServerName, serverPort))
 #Wait for a Client Request 
 serverSocket.listen(1)
-print('Server is awaiting Input')
 while True: #Infinite loop to listen
     connectionSocket, addr = serverSocket.accept()
-    print("Client Request recieved.")
-    request = connectionSocket.recv(1024).decode()  
-    filename = request
-    #unsure how to do images
-    #capitalizedSentence = request.upper()
+    print("Client Request received.")
+    filerequest = connectionSocket.recv(1024).decode()
+    filename = filerequest
     try:
-		file = open(filename, "r")
-	except IOError:
-		print("File Does Not Exist, must send failed message")
-		resp = "\HTTP/1.1 404 not found"
+        if(filename.endswith(".txt")):
+            file_content = open(filename, "r").read()
+            mimetype = "text/html"
+        elif(filename.endswith(".jpg")):
+            file_content = Image.open(filename)
+            mimetype = "image/jpg"
+    except IOError:
+        print("Unknown file, must send failed message")
+        resp = "\HTTP/1.1 404 not found"
         connectionSocket.send(resp.encode())
         print("Server Response Sent.")
         connectionSocket.close()
@@ -38,11 +42,11 @@ while True: #Infinite loop to listen
     resp = "HTTP/1.1 200 OK"
     connectionSocket.send(resp.encode())
     print("HTTP Response Sent.")
-	file_content = file.read()
+    connectionSocket.send(mimetype.encode())
+    print("Content Type Response Sent.")
     connectionSocket.send(file_content.encode())
+    print("File Content Response Sent.")
     #Send Server Response 
-    #connectionSocket.send(capitalizedSentence.encode())
-    print("Server Response Sent.")
     connectionSocket.close()
     print("Socket closed and request completed.")
 
