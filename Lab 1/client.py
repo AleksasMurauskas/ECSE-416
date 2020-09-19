@@ -57,12 +57,11 @@ if(serverResponse=="\HTTP/1.1 404 not found"):
 	sys.exit(1)
 
 # receive file content
-mimetypeResponse = clientSocket.recv(1024)
-file_content = clientSocket.recv(1024)
-print(mimetypeResponse)
-print(file_content)
+mimetypeResponse = clientSocket.recv(1024).decode("utf-8")
+file_content = clientSocket.recv(1024).decode("utf-8")
 if(mimetypeResponse=="text/html"):
-	print(file_content.read())
+	print("Content-type: ", mimetypeResponse)
+	print(file_content)
 elif(mimetypeResponse=="image/jpg"):
 	Image.open(file_content).show()
 clientSocket.close()
