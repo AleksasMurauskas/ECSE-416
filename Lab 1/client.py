@@ -71,7 +71,7 @@ start_time = time.time()
 l=0
 while True:
 	#Since pickled data is bgt than 4096, pickle data once all parts received 
-	packet = clientSocket.recv(2)
+	packet = clientSocket.recv(1024)
 	if not packet: 
 		break
 	data.append(packet)
