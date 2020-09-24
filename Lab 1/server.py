@@ -35,10 +35,19 @@ while True:
         if(filename.endswith(".txt")):
             data = open(filename, "r").read()
             mime_type = "text/html"
+            file_content = pickle.dumps(data)
         elif(filename.endswith(".jpg")):
             data = Image.open(filename)
             mime_type = "image/jpg"
-        file_content = pickle.dumps(data)
+            file_content = pickle.dumps(data)
+        else:
+            print("Invalid File Type")
+            resp = "\HTTP/1.1 404 not found"
+            connectionSocket.send(resp.encode())
+            print("Server Response Sent.")
+            connectionSocket.close()
+            print("Socket closed and request cannot be completed.")
+            continue
     except IOError:
         print("Unknown file, must send failed message")
         resp = "\HTTP/1.1 404 not found"
@@ -60,3 +69,8 @@ while True:
     #Close Socket
     connectionSocket.close()
     print("Socket closed and request completed.")
+
+
+    #cd Documents/"Fall 2020"/"ECSE 416"/ECSE-416/"Lab 1"
+    #python server.py
+    #python client.py 127.0.0.2 12345 test.txt

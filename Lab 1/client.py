@@ -10,6 +10,8 @@ import socket
 import sys
 import pickle
 from PIL import Image
+import time
+
 
 #Standard Server Name and Port Numbers and timeout 
 serverName = '127.0.0.2'
@@ -44,7 +46,6 @@ try:
 except socket.error:
 	print("Client Socket could not connect to server")
 	sys.exit(1)
-
 print("Connection OK.")
 #Create File request
 fileRequest = filename
@@ -66,15 +67,20 @@ print("Content-type: ", mimetypeResponse)
 #receive file content
 data = []
 #Infinite loop to listen
+start_time = time.time()
+l=0
 while True:
 	#Since pickled data is bgt than 4096, pickle data once all parts received 
-	packet = clientSocket.recv(1024)
+	packet = clientSocket.recv(2)
 	if not packet: 
 		break
 	data.append(packet)
+	l=l+1
 #Pickle complete data
 file_content = pickle.loads(b"".join(data))
 #Display depending on file format
+print("--- %s seconds ---" % (time.time() - start_time))
+print("--- %s Packets" % l)
 if(mimetypeResponse=="text/html"):
 	print(file_content)
 elif(mimetypeResponse=="image/jpg"):
